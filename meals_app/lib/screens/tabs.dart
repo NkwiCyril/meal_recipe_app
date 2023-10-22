@@ -24,13 +24,30 @@ class _TabsScreenState extends State<TabsScreen> {
   // creating an array in which favorite meals will be pushed into  when marked as favorites
   final List<MealModel> _favoriteMeals = [];
 
+  void _displayMessage(String message) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
   void _toogleFavoriteMealStatus(MealModel meal) {
+    // checks if the favorite meals lists contains that meal already then removes it if true
     final isExisting = _favoriteMeals.contains(meal);
 
     if (isExisting) {
-      _favoriteMeals.remove(meal);
+      setState(() {
+        _favoriteMeals.remove(meal);
+      });
+      _displayMessage('Meal removed from favorites.');
     } else {
-      _favoriteMeals.add(meal);
+      setState(() {
+        _favoriteMeals.add(meal);
+      });
+      _displayMessage('Meal added to favorites.');
+// add that meal if it has not yet been added
     }
   }
 
