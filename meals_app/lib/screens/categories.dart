@@ -19,7 +19,6 @@ class CategoriesScreen extends StatelessWidget {
       MaterialPageRoute(
         builder: (ctx) {
           return MealsScreen(
-            title: category.title,
             meals: filteredMeals,
             onToggleMealStatus: onToggleMealStatus,
           );
@@ -31,12 +30,6 @@ class CategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Pick a category',
-          style: TextStyle(fontSize: 25),
-        ),
-      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 13),
         child: GridView(
@@ -64,3 +57,4 @@ class CategoriesScreen extends StatelessWidget {
     );
   }
 }
+

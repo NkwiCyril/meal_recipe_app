@@ -6,12 +6,10 @@ import 'package:meals_app/widgets/meals_item.dart';
 class MealsScreen extends StatelessWidget {
   const MealsScreen({
     super.key,
-    required this.title,
     required this.meals,
     required this.onToggleMealStatus,
   });
 
-  final String title;
   final List<MealModel> meals;
   final void Function(MealModel meal) onToggleMealStatus;
 
@@ -66,9 +64,6 @@ class MealsScreen extends StatelessWidget {
     Widget content = meals.isEmpty ? emptyContent : filledContent;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
       body: content,
     );
   }
