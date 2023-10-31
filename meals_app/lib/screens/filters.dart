@@ -13,6 +13,9 @@ class FiltersScreen extends StatefulWidget {
 
 class _FiltersScreenState extends State<FiltersScreen> {
   var _glutenFreeFilterSet = false;
+  var _lactoseFreeFilterSet = false;
+  var _vegatarianFilterSet = false;
+  var _veganFilterSet = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +42,11 @@ class _FiltersScreenState extends State<FiltersScreen> {
           SwitchListTile(
             value: _glutenFreeFilterSet,
             onChanged: (isChecked) {
-              setState(() {
-                _glutenFreeFilterSet = isChecked;
-              });
+              setState(
+                () {
+                  _glutenFreeFilterSet = isChecked;
+                },
+              );
             },
             title: Text(
               'Gluten-free',
@@ -50,10 +55,90 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   .titleLarge!
                   .copyWith(color: Theme.of(context).colorScheme.onBackground),
             ),
-            subtitle: const Text('Only include gluten-free meals.'),
+            subtitle: const Text(
+              'Only include gluten-free meals.',
+            ),
             activeColor: Theme.of(context).colorScheme.tertiary,
-            contentPadding: const EdgeInsets.only(left: 34, right: 22),
-          )
+            contentPadding: const EdgeInsets.only(
+              left: 34,
+              right: 22,
+            ),
+          ),
+          SwitchListTile(
+            value: _lactoseFreeFilterSet,
+            onChanged: (isChecked) {
+              setState(
+                () {
+                  _lactoseFreeFilterSet = isChecked;
+                },
+              );
+            },
+            title: Text(
+              'Lactose-free',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(color: Theme.of(context).colorScheme.onBackground),
+            ),
+            subtitle: const Text(
+              'Only include lactose-free meals.',
+            ),
+            activeColor: Theme.of(context).colorScheme.tertiary,
+            contentPadding: const EdgeInsets.only(
+              left: 34,
+              right: 22,
+            ),
+          ),
+          SwitchListTile(
+            value: _vegatarianFilterSet,
+            onChanged: (isChecked) {
+              setState(
+                () {
+                  _vegatarianFilterSet = isChecked;
+                },
+              );
+            },
+            title: Text(
+              'Vegetarian',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(color: Theme.of(context).colorScheme.onBackground),
+            ),
+            subtitle: const Text(
+              'Only include vegetarian meals.',
+            ),
+            activeColor: Theme.of(context).colorScheme.tertiary,
+            contentPadding: const EdgeInsets.only(
+              left: 34,
+              right: 22,
+            ),
+          ),
+          SwitchListTile(
+            value: _veganFilterSet,
+            onChanged: (isChecked) {
+              setState(
+                () {
+                  _veganFilterSet = isChecked;
+                },
+              );
+            },
+            title: Text(
+              'Vegan',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(color: Theme.of(context).colorScheme.onBackground),
+            ),
+            subtitle: const Text(
+              'Only include vegan meals.',
+            ),
+            activeColor: Theme.of(context).colorScheme.tertiary,
+            contentPadding: const EdgeInsets.only(
+              left: 34,
+              right: 22,
+            ),
+          ),
         ],
       ),
     );
