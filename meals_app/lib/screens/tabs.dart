@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/data/categories_dummy.dart';
 import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/screens/categories.dart';
 import 'package:meals_app/screens/filters.dart';
 import 'package:meals_app/screens/meals.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
+
+const kInitialFilters = {
+  Filter.glutenFree: false,
+  Filter.lactoseFree: false,
+  Filter.vegetarian: false,
+  Filter.vegan: false,
+};
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -14,6 +22,7 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   int _currentScreenIndex = 0;
+  Map<Filter, bool> _selectedFilters = kInitialFilters;
 
   void _onSelectItem(int index) {
     setState(
@@ -40,36 +49,58 @@ class _TabsScreenState extends State<TabsScreen> {
     final isExisting = _favoriteMeals.contains(meal);
 
     if (isExisting) {
-      setState(() {
-        _favoriteMeals.remove(meal);
-      });
+      setState(
+        () {
+          _favoriteMeals.remove(meal);
+        },
+      );
       _displayMessage('Meal removed from favorites.');
     } else {
-      setState(() {
-        _favoriteMeals.add(meal);
-      });
+      setState(
+        () {
+          _favoriteMeals.add(meal);
+        },
+      );
       _displayMessage('Meal added to favorites.');
 // add that meal if it has not yet been added
     }
   }
 
-  void _setScreen(String identifier) {
+  void _setScreen(String identifier) async {
     if (identifier == 'filters') {
       Navigator.of(context).pop();
-      Navigator.of(context).push(
+      final result = await Navigator.of(context).push<Map<Filter, bool>>(
         MaterialPageRoute(
-          builder: (ctx) => const FiltersScreen(),
+          builder: (ctx) => FiltersScreen(currentFilters: _selectedFilters),
         ),
       );
-    } else {
-      Navigator.of(context).pop();
+      setState(() {
+        _selectedFilters = result ?? kInitialFilters;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final availableMeals = dummyMeals.where((meal) {
+      if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
+        return false;
+      }
+      if (_selectedFilters[Filter.lactoseFree]! && !meal.isGlutenFree) {
+        return false;
+      }
+      if (_selectedFilters[Filter.vegetarian]! && !meal.isGlutenFree) {
+        return false;
+      }
+      if (_selectedFilters[Filter.vegan]! && !meal.isGlutenFree) {
+        return false;
+      }
+      return true;
+    }).toList();
+
     Widget activeScreen = CategoriesScreen(
       onToggleMealStatus: _toogleFavoriteMealStatus,
+      availableMeals: availableMeals,
     );
 
     if (_currentScreenIndex == 1) {
