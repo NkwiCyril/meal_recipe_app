@@ -8,11 +8,9 @@ class MealsScreen extends StatelessWidget {
   const MealsScreen({
     super.key,
     required this.meals,
-    required this.onToggleMealStatus,
   });
 
   final List<MealModel> meals;
-  final void Function(MealModel meal) onToggleMealStatus;
 
   void selectMeal(BuildContext context, MealModel meal) {
     Navigator.push(
@@ -21,7 +19,6 @@ class MealsScreen extends StatelessWidget {
         builder: (ctx) {
           return MealDetailsScreen(
             meal: meal,
-            onToggleMealStatus: onToggleMealStatus,
           );
         },
       ),

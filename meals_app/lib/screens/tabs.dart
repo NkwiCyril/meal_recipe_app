@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/data/categories_dummy.dart';
-import 'package:meals_app/models/meal.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:meals_app/providers/favorite_meals_provider.dart';
 import 'package:meals_app/screens/categories.dart';
 import 'package:meals_app/screens/filters.dart';
 import 'package:meals_app/screens/meals.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
+import 'package:meals_app/providers/meals_provider.dart';
 
 const kInitialFilters = {
   Filter.glutenFree: false,
@@ -13,14 +15,14 @@ const kInitialFilters = {
   Filter.vegan: false,
 };
 
-class TabsScreen extends StatefulWidget {
+class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
 
   @override
-  State<TabsScreen> createState() => _TabsScreenState();
+  ConsumerState<TabsScreen> createState() => _TabsScreenState();
 }
 
-class _TabsScreenState extends State<TabsScreen> {
+class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _currentScreenIndex = 0;
   Map<Filter, bool> _selectedFilters = kInitialFilters;
 
@@ -30,40 +32,6 @@ class _TabsScreenState extends State<TabsScreen> {
         _currentScreenIndex = index;
       },
     );
-  }
-
-  // creating an array in which favorite meals will be pushed into  when marked as favorites
-  final List<MealModel> _favoriteMeals = [];
-
-  void _displayMessage(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
-
-  void _toogleFavoriteMealStatus(MealModel meal) {
-    // checks if the favorite meals lists contains that meal already then removes it if true
-    final isExisting = _favoriteMeals.contains(meal);
-
-    if (isExisting) {
-      setState(
-        () {
-          _favoriteMeals.remove(meal);
-        },
-      );
-      _displayMessage('Meal removed from favorites.');
-    } else {
-      setState(
-        () {
-          _favoriteMeals.add(meal);
-        },
-      );
-      _displayMessage('Meal added to favorites.');
-// add that meal if it has not yet been added
-    }
   }
 
   void _setScreen(String identifier) async {
@@ -82,7 +50,9 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final availableMeals = dummyMeals.where((meal) {
+    final meals = ref.watch(mealsProvider);
+
+    final availableMeals = meals.where((meal) {
       if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
         return false;
       }
@@ -99,14 +69,14 @@ class _TabsScreenState extends State<TabsScreen> {
     }).toList();
 
     Widget activeScreen = CategoriesScreen(
-      onToggleMealStatus: _toogleFavoriteMealStatus,
       availableMeals: availableMeals,
     );
 
+    final favoriteMeals = ref.watch(favoriteMealsProvider);
+
     if (_currentScreenIndex == 1) {
       activeScreen = MealsScreen(
-        meals: _favoriteMeals,
-        onToggleMealStatus: _toogleFavoriteMealStatus,
+        meals: favoriteMeals,
       );
     }
 
